@@ -1,0 +1,177 @@
+{
+  "button-menu": {
+    "scope": "html",
+    "prefix": "button-menu",
+    "body": "  <button-menu \n    on-labelClick={this.labelClick($event)}\n    on-iconClick={this.iconClick($event)}\n    label='按钮'\n    buttonClass='u-btn-ghost' />"
+  },
+  "checkbox": {
+    "scope": "html",
+    "prefix": "checkbox",
+    "body": "<checkbox checked={true} on-change={this.handleChange($event)}>确定</checkbox>\n"
+  },
+  "checkbox-group": {
+    "scope": "html",
+    "prefix": "checkbox-group",
+    "body": "  <checkbox-group defaultValue={defaultValue} options={options} on-change={this.groupChange($event)} />"
+  },
+  "datepick": {
+    "scope": "html",
+    "prefix": "datepick",
+    "body": "  <datepick\n  autoClose={true}\n  on-change={this.changeDate($event)}\n  maskZIndex={310}\n  disabledTime={false}\n  showHMSText={true}\n  gap={5}\n></datepick>\n"
+  },
+  "date-range-piacker": {
+    "scope": "html",
+    "prefix": "date-range-piacker",
+    "body": "  <date-range-piacker\n    dateRange={dateRange}\n    on-change={this.changeStaticTime($event)}\n  />\n"
+  },
+  "dropable-x": {
+    "scope": "html",
+    "prefix": "dropable-x",
+    "body": "<dropable-x\n  direct='x'\n  name=\"x\"\n  on-toucheddrop={this.itemDrop($event)}\n>\n  {#list list as item}\n    <dragable-x\n      target='x'\n      key={item}\n      dragFromCurrentPosition\n      handle='.handle'\n    >\n      <div class=\"item item-inline\">\n        <span class=\"p-l-8 u-ellipsis\" title=\"{item.text}\">{item.text}</span>\n      </div>\n    </dragable-x>\n  {/list}\n</dropable-x>\n"
+  },
+  "drag-move": {
+    "scope": "html",
+    "prefix": "drag-move",
+    "body": "<div class=\"g-sd g-sd-1\">\n    <div class=\"m-nav3 \"> </div>\n    <drag-move direction='horizontal' offsetLeft={489}  on-dragMove={this.dragMove($event)}></drag-move>\n</div>\n"
+  },
+  "Row": {
+    "scope": "html",
+    "prefix": "Row",
+    "body": "  <Row className=\"grid-show-1\">\n    <Col span={12}>col-12</Col>\n  </Row>\n  <Row className=\"grid-show-2\">\n    <Col span={6}>col-6</Col>\n    <Col span={6}>col-6</Col>\n  </Row>\n  <Row className=\"grid-show-3\">\n    <Col span={4}>col-4</Col>\n    <Col span={4}>col-4</Col>\n    <Col span={4}>col-4</Col>\n  </Row>\n  <Row className=\"grid-show-4\">\n    <Col span={3}>col-3</Col>\n    <Col span={3}>col-3</Col>\n    <Col span={3}>col-3</Col>\n    <Col span={3}>col-3</Col>\n  </Row>\n"
+  },
+  "numberInput": {
+    "scope": "html",
+    "prefix": "numberInput",
+    "body": "<numberInput max={100} step={1} min={0} value={number} on-change={this.changeNumber($event)}/>\n"
+  },
+  "r-search-2": {
+    "scope": "html",
+    "prefix": "r-search-2",
+    "body": "<r-search-2 minLimit={10} focus={true} emitType=\"keyup\" on-focus={this.onfocus($event)} placeholder='请输入你的名字' on-search={this.search($event)} />\n"
+  },
+  "r-auto-width-input": {
+    "scope": "html",
+    "prefix": "r-auto-width-input",
+    "body": "    <r-auto-width-input\n    className=\"auto-width-style\"\n    value={inputValue}\n    defaultValue=\"请输入\"\n    placeholder={placeholder}\n    view={false}\n    showError\n    checkError={this.checkTitleError.bind(this)}\n    on-update={this.updateTitle($event)}\n    >\n  </r-auto-width-input>\n"
+  },
+  "mask": {
+    "scope": "html",
+    "prefix": "mask",
+    "body": "<mask transparent={false} maskClass='mask-class' ref='mask' show={show} zIndex={200} on-click={this.maskClick($event)} noAnim={true}></mask>\n"
+  },
+  "ContextMenuNew new": {
+    "scope": "javascript,typescript",
+    "prefix": "ContextMenuNew new",
+    "body": "    new ContextMenuNew({\n      data: {\n        menus: [\n          {\n            text: '菜单1',\n            clicked: (e) => this.clickMenu(e),\n            children: [\n              {\n                text: '子菜单1',\n                clicked: (e) => this.clickMenu(e),\n                children: [],\n              },\n              {\n                text: '子菜单2',\n                clicked: (e) => this.clickMenu(e),\n                children: [],\n              },\n            ],\n          },\n          {\n            text: '菜单2',\n            clicked: (e) => this.clickMenu(e),\n            children: [],\n          },\n        ],\n        target: event.target,\n        pos: 'bottom',\n      }\n    })"
+  },
+  "Modal new": {
+    "scope": "javascript,typescript",
+    "prefix": "Modal new",
+    "body": "    new Modal({\n      data: {\n        title: '添加新用户',\n        autoClose: true,\n        width: 500,\n        className: 'm-modal-adduser',\n        noMaskAnim: false,\n      },\n      $body: `\n      <h3>Modal Content</h3>\n      <h3>Modal Content</h3>\n      <h3>Modal Content</h3>\n      <h3>Modal Content</h3>\n      `,\n    })"
+  },
+  "ConfirmModal new": {
+    "scope": "javascript,typescript",
+    "prefix": "ConfirmModal new",
+    "body": "    new ConfirmModal({\n      data: {\n        title: '删除文件夹',\n        msg: '文件夹下存在大屏/文件夹，确定要删除吗？'\n      },\n      callback() {\n        // 确认之后的回调\n      },\n    })"
+  },
+  "r-pager": {
+    "scope": "html",
+    "prefix": "r-pager",
+    "body": "  <r-pager total={30} size={20} current={2} on-size={this.onSize($event)} on-page={this.onPage($event)}></r-pager>\n"
+  },
+  "ListView": {
+    "scope": "html",
+    "prefix": "ListView",
+    "body": "<ListView on-select={this.onChange($event)} class=\"u-btn-group type\" value={value}>\n    <Item class=\"u-btn\" value=\"outside\">仅外角</Item>\n    <Item class=\"u-btn\" value=\"both\">两端</Item>\n</ListView>\n\n<ListView on-select={this.onChange($event)} class=\"u-btn-group type\" value={value}>\n    <Item class=\"u-btn\" value=\"outside\">仅外角</Item>\n    <Item class=\"u-btn\" disabled value=\"both\">两端</Item>\n</ListView>\n\n<ListView multiple on-select={this.onChange($event)} class=\"u-btn-group type\" value={value}>\n    <Item class=\"u-btn\" value=\"outside\">仅外角</Item>\n    <Item class=\"u-btn\" value=\"both\">两端</Item>\n</ListView>\n"
+  },
+  "radio-group": {
+    "scope": "html",
+    "prefix": "radio-group",
+    "body": "  <radio-group defaultValue={defaultValue} on-change={this.handleChange($event)} options={options}>"
+  },
+  "range": {
+    "scope": "html",
+    "prefix": "range",
+    "body": "<range max={100} vmax={100} mode=\"min\" vmin={10} min={0} on-change={this.handleChange($event)}></range>\n\n<range max={100} vmax={100} mode=\"max\" vmin={10} min={0} on-change={this.handleChange($event)}></range>\n\n<range max={100} vmax={100} vmin={10} min={0} on-change={this.handleChange($event)}></range>\n"
+  },
+  "rich-input": {
+    "scope": "html",
+    "prefix": "rich-input",
+    "body": "<rich-input placeholder=\"输入#号可插入动态时间\" on-focus={this.hideError('title')} on-change={this.onChange($event)} value={value} alwaysHighLight></rich-input>\n"
+  },
+  "rich-text": {
+    "scope": "html",
+    "prefix": "rich-text",
+    "body": "<rich-text on-change={this.handleChange($event)} toolbar={bodyToolbar}\n    placeholder=\"请输入正文\" value={value}>\n</rich-text>\n"
+  },
+  "dropdown-select": {
+    "scope": "html",
+    "prefix": "dropdown-select",
+    "body": "<dropdown-select inheritWidth on-change={this.onChangeSelect($event)} value={value} options={options} />\n"
+  },
+  "dropdown-select-search": {
+    "scope": "html",
+    "prefix": "dropdown-select-search",
+    "body": "  <dropdown-select-search\n    ref=dropdown\n    overlayClass=\"m-overlay-pivot-members\"\n    searchPlaceholder=\"请输入\"\n    inheritWidth\n    searchKey={keyword}\n    options={options}\n    loading={loading}\n    on-focus={this.handleFocus($event)}\n    on-resetSearch={this.resetSearch($event)}\n    on-change={this.changeValue($event)}\n  />"
+  },
+  "dropdown-input": {
+    "scope": "html",
+    "prefix": "dropdown-input",
+    "body": "<dropdown-input inheritWidth on-change={this.onChange($event)} value={value} options={options}></dropdown-input>\n"
+  },
+  "dropdown-color": {
+    "scope": "html",
+    "prefix": "dropdown-color",
+    "body": "<dropdown-color\n  title='点击展示色板'\n  color={color}\n  className=\"m-dropdown-color-block\"\n  on-change={this.change($event)}>\n</dropdown-color>\n"
+  },
+  "r-lazy-select": {
+    "scope": "html",
+    "prefix": "r-lazy-select",
+    "body": "    <r-lazy-select\n     searchKey='name'\n     list={list}\n     item={this.$item}\n     defaultItems={defaultItems}>"
+  },
+  "SlideModal new": {
+    "scope": "javascript,typescript",
+    "prefix": "SlideModal new",
+    "body": "    new SlideModal({\n      $body: `\n      <div class='slidein-container'>\n       <h2>Content</h2>\n       <h2>Content</h2>\n       <h2>Content</h2>\n       <h2>Content</h2>\n      </div>\n      `,\n      data: {\n        noConfirm: false,\n        title: '30天历史记录',\n        autoClose: true,\n        direction: 'right',\n      }\n    })"
+  },
+  "switch": {
+    "scope": "html",
+    "prefix": "switch",
+    "body": "<switch on-change={this.changeStatus($event)} status=\"{warning.enable == 1? 'on' : 'off'}\" />\n\n<switch on-change={this.changeStatus($event)} disabled status=\"{warning.enable == 1? 'on' : 'off'}\" />\n"
+  },
+  "rgc-table": {
+    "scope": "html",
+    "prefix": "rgc-table",
+    "body": "    <rgc-table fixed ref=\"list\" on-action={this.handleAction($event)} on-selectionChange={this.selectionChange($event)}>"
+  },
+  "r-table": {
+    "scope": "html",
+    "prefix": "r-table",
+    "body": "<r-table disabled={isDisabled} on-deleteShare={this.onDeleteShare($event)} heads={heads} body={body} list={list} ref=\"table\" loading={loading} ellipsis>"
+  },
+  "tab": {
+    "scope": "html",
+    "prefix": "tab",
+    "body": "<tab className='common-tab'>\n  <tab.pane title=\"报告\" selected on-active={this.selectTab('report')}>\n    <label>报告</label>\n  </tab.pane>\n  <tab.pane title=\"大屏\" on-active={this.selectTab('screen')}>\n    <label>大屏</label>\n  </tab.pane>\n</tab>\n"
+  },
+  "Tooltip": {
+    "scope": "html",
+    "prefix": "Tooltip",
+    "body": "<span class=\"tooltip-container\">\n  <Tooltip content='<span>今天天气不错</span>' placement=\"top\">\n    <span>\n      今天天气不错。。。\n    </span>\n  </Tooltip>\n</span>\n"
+  },
+  "tree-list": {
+    "scope": "html",
+    "prefix": "tree-list",
+    "body": "<div class=\"treelist-container\">\n  <tree-list\n    ref=\"treeNode\"\n    records={result}\n    defaultExpandParent={true}\n    isExclude={false}\n    isDisabledAll={false}\n    noLevel={true}\n    visibleHeight={244}\n    defaultChecked={[['parent-1', 'leaf-1']]}\n    hideNullValue={false}\n    on-childUpdateCheck={this.updateSelect()}\n></tree-list>\n</div>\n"
+  },
+  "r-uploader": {
+    "scope": "html",
+    "prefix": "r-uploader",
+    "body": "<r-uploader ref=\"uploader\" extensions=\"png,jpg,gif\" url={url} on-sending={this.onSending($event)} on-error={this.onError($event)} on-success={this.onSuccess($event)}></r-uploader>\n"
+  },
+  "ErrorTip new": {
+    "scope": "javascript,typescript",
+    "prefix": "ErrorTip new",
+    "body": " new ErrorTip({            data: {\n                parent,\n                message\n            }\n        })"
+  }
+}

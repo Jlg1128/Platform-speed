@@ -1,0 +1,66 @@
+{
+    "name": "platform-speed",
+    "displayName": "platform-speed",
+    "description": "Platform 项目快速开发",
+    "version": "0.1.0",
+    "publisher": "jianglonggui",
+    "engines": {
+        "vscode": "^1.63.0"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/chenshy39/regular-autocomplete.git"
+    },
+    "keywords": [
+        "regular",
+        "regularjs",
+        "regular-autocomplete"
+    ],
+    "author": {
+        "name": "jianglonggui"
+    },
+    "icon": "image/icon.png",
+    "activationEvents": [
+        "onLanguage:javascript",
+        "onLanguage:html"
+    ],
+    "contributes": {
+        "snippets": [
+            {
+                "language": "javascript",
+                "path": "./snippets/regular-template.json"
+            },
+            {
+                "language": "javascript",
+                "path": "./snippets/regular-methods.json"
+            },
+            {
+                "language": "javascript",
+                "path": "./snippets/platform-component.json"
+            },
+            {
+                "language": "html",
+                "path": "./snippets/regular-template.json"
+            },
+            {
+                "language": "html",
+                "path": "./snippets/platform-component.json"
+            }
+        ]
+    },
+    "main": "./out/extension",
+    "scripts": {
+        "build": "tsc -p ./",
+        "watch": "tsc -watch -p ./",
+        "test": "node ./out/test/runTest.js"
+    },
+    "devDependencies": {
+        "typescript": "^4.4.4",
+        "tslint": "^5.8.0",
+        "@types/vscode": "^1.63.0",
+        "@types/glob": "^7.1.4",
+        "@types/mocha": "^9.0.0",
+        "@types/node": "14.x",
+        "@vscode/test-electron": "^1.6.2"
+    }
+}
