@@ -6,7 +6,7 @@ export class CompletionHTML implements vscode.CompletionItemProvider {
         const completionItems:vscode.CompletionItem[] = [];
         
         // 函数定义正则
-        const funcExp = /(\S+)\((.*)\)\s*{/g;
+        const funcExp = /\s{1,}([a-zA-Z_]+)\((.*)\)\s*{/g;
         
         let result;
         while((result = funcExp.exec(content)) !== null) {
@@ -22,6 +22,9 @@ export class CompletionHTML implements vscode.CompletionItemProvider {
             completionItem.label = funcName;
             let snippet = `${funcName}(`;
             params.forEach((p, index) => {
+                if (['e', 'event', 'evt'].includes(p)) {
+                    p = '$event';
+                }
                 // 处理包含$符的变量
                 if (p.indexOf('$') !== -1) {
                     p = '\\' + p;
@@ -50,7 +53,7 @@ export class CompletionHTML implements vscode.CompletionItemProvider {
             const editor = vscode.window.activeTextEditor;
             let activeFileName = editor ? editor.document.fileName : '';
             activeFileName = activeFileName.substring(0, activeFileName.lastIndexOf('.'));
-
+            
             //  获取对应的js文件
             await vscode.workspace.openTextDocument(`${activeFileName}.js`).then((files) => {
                 const text = files.getText();
