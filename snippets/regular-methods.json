@@ -2,11 +2,11 @@
     "RegularComponent": {
         "prefix": "rglc",
         "body": [
-            "import Regular from 'regularjs';",
+            "const Regular = require('regularjs');",
             "",
             "const tpl = ``;",
             "",
-            "export default Regular.extend({",
+            "module.export = Regular.extend({",
             "\tname: '${1:ComponentName}',",
             "\ttemplate: tpl,",
             "\tconfig(data) {},",
@@ -20,13 +20,6 @@
             "this.\\$update();"
         ],
         "description": "regular update"
-    },
-    "Parent": {
-        "prefix": "parent",
-        "body": [
-            "this.\\$parent();"
-        ],
-        "description": "regular parent"
     },
     "Watch": {
         "prefix": "watch",

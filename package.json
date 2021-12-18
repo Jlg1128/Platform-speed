@@ -24,7 +24,33 @@
         "commands": {
             "command": "insertrequire",
             "title": "insertrequire"
-        }
+        },
+        "languages": [
+            {
+                "id": "html",
+                "extensions": [
+                    ".html"
+                ],
+                "configuration": "./languages/regular-html-language-configuration.json"
+            }
+        ],
+        "grammars": [
+            {
+                "language": "html",
+                "scopeName": "text.html.regular-html",
+                "path": "./syntaxes/regular-html.tmLanguage.json"
+            }
+        ],
+        "snippets": [
+            {
+                "language": "javascript",
+                "path": "./snippets/regular-methods.json"
+            },
+            {
+                "language": "html",
+                "path": "./snippets/regular-template.json"
+            }
+        ]
     },
     "icon": "image/icon.png",
     "activationEvents": [

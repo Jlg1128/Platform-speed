@@ -45,5 +45,12 @@
             "{#include ${1:template}}"
         ],
         "description": "regular include statement"
+    },
+    "Inc": {
+        "prefix": "inc",
+        "body": [
+            "{#inc ${1:template}}"
+        ],
+        "description": "regular include statement"
     }
 }
