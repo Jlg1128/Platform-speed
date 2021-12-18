@@ -33,7 +33,7 @@ const judgeTypeOfTag = function(componentName: string, currentLineText: string, 
   }
 }
 
-function traverse(filepath: string, componentName: string, excludeDirNames: string[] = []) {
+function traverse(filepath: string, componentName: string, excludeDirNames?: string[]) {
   let tempFilePath = filepath;
   let temp: string[] = [filepath];
   while (temp.length) {
@@ -53,7 +53,7 @@ function traverse(filepath: string, componentName: string, excludeDirNames: stri
     else {
       let dirNames = fs.readdirSync(tempFilePath);
       for (let dirname of dirNames) {
-        if (!excludeDirNames.includes(dirname)) {
+        if (!excludeDirNames || !excludeDirNames.includes(dirname)) {
           temp.push(tempFilePath + '/' + dirname);
         }
       }
@@ -62,7 +62,7 @@ function traverse(filepath: string, componentName: string, excludeDirNames: stri
   return '';
 }
 
-function getComponentResolvePath(basedir: string | string[], componentName: string, excludeDirNames: string[]) {
+function getComponentResolvePath(basedir: string | string[], componentName: string, excludeDirNames?: string[]) {
   let resultFilePath = '';
   if (Array.isArray(basedir)) {
     for (let dirpath of basedir) {
@@ -87,10 +87,33 @@ function getWiderRangeText(document: vscode.TextDocument, position: vscode.Posit
 }
 // const baseDir = path.join(__dirname, '/src/app/client/components');
 
+function getCurrentProjectPath() {
+  let wordSpaceFolders = vscode.workspace.workspaceFolders;
+  
+  if (!wordSpaceFolders || !wordSpaceFolders.length) {
+    return '';
+  }
+  return wordSpaceFolders[0].uri.path;
+}
+// 获取匹配的内容在文件中的地址
+function getComponentInFile(fileData: string, reg: RegExp, captureIndex: number = 0): null|{index: number, content: string} {
+  let regMatchArr = reg.exec(fileData)
+  if (!regMatchArr) {
+    return null;
+  }
+  let content = regMatchArr[captureIndex] || regMatchArr[0];
+  let startIdx = regMatchArr.index + regMatchArr[0].indexOf(content);
+  return {
+    index: regMatchArr.index + startIdx,
+    content,
+  }
+}
 export {
   getFilePath,
   escapeRegExp,
   getComponentResolvePath,
   getWiderRangeText,
   judgeTypeOfTag,
+  getCurrentProjectPath,
+  getComponentInFile,
 }

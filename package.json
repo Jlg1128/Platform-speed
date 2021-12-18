@@ -20,36 +20,17 @@
     "author": {
         "name": "jianglonggui"
     },
-    
+    "contributes": {
+        "commands": {
+            "command": "insertrequire",
+            "title": "insertrequire"
+        }
+    },
     "icon": "image/icon.png",
     "activationEvents": [
         "onLanguage:javascript",
         "onLanguage:html"
     ],
-    "contributes": {
-        "snippets": [
-            {
-                "language": "javascript",
-                "path": "./snippets/regular-template.json"
-            },
-            {
-                "language": "javascript",
-                "path": "./snippets/regular-methods.json"
-            },
-            {
-                "language": "javascript",
-                "path": "./snippets/platform-component.json"
-            },
-            {
-                "language": "html",
-                "path": "./snippets/regular-template.json"
-            },
-            {
-                "language": "html",
-                "path": "./snippets/platform-component.json"
-            }
-        ]
-    },
     "main": "./out/extension",
     "scripts": {
         "build": "tsc -p ./",

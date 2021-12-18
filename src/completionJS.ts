@@ -33,11 +33,10 @@ export class CompletionJS implements vscode.CompletionItemProvider {
             params = params.map((p) => p.trim());
             
             // 生命周期函数过滤
-            if (['config', 'init', 'destory'].indexOf(funcName) !== -1) {
+            if (['config', 'init', 'destory', 'mount', 'enter', 'leave'].indexOf(funcName) !== -1) {
                 continue;
             }
             let completionItem = new vscode.CompletionItem(funcName, vscode.CompletionItemKind.Function);
-            completionItem.label = funcName;
             let snippet = `${funcName}(`;
             params.forEach((p, index) => {
                 if (TAG_MATCH.test(currentLine.text) && ['e', 'event', 'evt'].includes(p)) {
@@ -56,7 +55,6 @@ export class CompletionJS implements vscode.CompletionItemProvider {
             completionItem.insertText = new vscode.SnippetString(snippet);
             completionItems.push(completionItem);
         }
-
 
         return completionItems;
     }

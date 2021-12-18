@@ -1,8 +1,8 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
-import { getFilePath, getComponentResolvePath, getWiderRangeText, judgeTypeOfTag, TAG_OPEN_TYPE, escapeRegExp } from './util';
-import { NORMAL_HTMLELMENT_ARRAY, COMPONENT_DIR_PATH, TAG_MATCH, CONTAINER_COMPONENT_DIR_PATH, EXCLUDE_TRAVERSE_DIRNAMES, ENDTAG_MATCH } from './const';
+import { getFilePath, getComponentResolvePath, getWiderRangeText, getCurrentProjectPath, judgeTypeOfTag, TAG_OPEN_TYPE, escapeRegExp } from './util';
+import { NORMAL_HTMLELMENT_ARRAY, COMPONENT_DIR_PATH, TAG_MATCH, CONTAINER_COMPONENT_DIR_PATH, EXCLUDE_TRAVERSE_DIRNAMES } from './const';
 
 /**
  * 查找文件定义的provider，匹配到了就return一个location，否则不做处理
@@ -12,13 +12,11 @@ import { NORMAL_HTMLELMENT_ARRAY, COMPONENT_DIR_PATH, TAG_MATCH, CONTAINER_COMPO
  * @param {*} token 
  */
 async function provideDefinition(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken) {
-  const fileName = path.basename(document.fileName);
   const fileResolvePath = document.fileName;
-  const workDir = path.dirname(fileName);
   const line = document.lineAt(position);
   const lineNumber = position.line;
   const range = document.getWordRangeAtPosition(position);
-  let word = document.getText(document.getWordRangeAtPosition(position));
+  let word = document.getText(range);
   // const projectPath = util.getProjectPath(document);
   // console.log('====== 进入 provideDefinition 方法 ======');
   // console.log('fileName: ' + fileName); // 文件名
@@ -26,12 +24,10 @@ async function provideDefinition(document: vscode.TextDocument, position: vscode
   // console.log('workDir: ' + workDir); // 当前文件所在目录
   console.log('word: ' + word); // 当前光标所在单词
 
-  let wordSpaceFolders = vscode.workspace.workspaceFolders;
-  if (!wordSpaceFolders || !wordSpaceFolders.length || !range) {
+  let projectPath = getCurrentProjectPath();
+  if (!projectPath || !range) {
     return null;
   }
-
-  let projectPath = wordSpaceFolders[0].uri.path;  // 当前工程目录
 
   let lineText = line.text;
 
@@ -41,7 +37,7 @@ async function provideDefinition(document: vscode.TextDocument, position: vscode
   let jsFilePath = currentInJS ? fileResolvePath : getFilePath(vscode.window.activeTextEditor, '.js');
 
   if (!fs.existsSync(jsFilePath)) {
-    return;
+    return null;
   }
 
   // 左右各自扩张1，用来匹配.和函数的(
@@ -53,13 +49,13 @@ async function provideDefinition(document: vscode.TextDocument, position: vscode
   const refsMatch = new RegExp(`(?:(\\$refs\\.${word})|(\\{\\s*${word}\\s*\\}\\s*=\\s*this\\.\\$refs))`);
   let currentLineText = document.lineAt(position).text;
 
-  let jsFile: vscode.TextDocument | null = null;
+  let jsFileDocument: vscode.TextDocument | null = null;
   if (word === 'this') {
-    jsFile = currentInJS ? document : await vscode.workspace.openTextDocument(jsFilePath);
-    let componentMatch = new RegExp('[A-Z]{1}[a-z]+\\.extend\\(\\{').exec(jsFile.getText());
+    jsFileDocument = currentInJS ? document : await vscode.workspace.openTextDocument(jsFilePath);
+    let componentMatch = new RegExp('[A-Z]{1}[a-z]+\\.extend\\(\\{').exec(jsFileDocument.getText());
     let lineNumber = 0;
     if (componentMatch) {
-      lineNumber = jsFile.positionAt(componentMatch.index).line;
+      lineNumber = jsFileDocument.positionAt(componentMatch.index).line;
     }
     return new vscode.Location(vscode.Uri.file(jsFilePath), new vscode.Position(lineNumber, 0));
   } else if (refsMatch.test(currentLineText)) {
@@ -90,12 +86,12 @@ async function provideDefinition(document: vscode.TextDocument, position: vscode
   } else if (funcNameMatch.test(lineText) && widerRangeHead === '.' && widerRangeFoot === '(') {
     // 匹配this.onChange()
     let funcName = word;
-    jsFile = currentInJS ? document : await vscode.workspace.openTextDocument(jsFilePath);
-    const text = jsFile.getText();
+    jsFileDocument = currentInJS ? document : await vscode.workspace.openTextDocument(jsFilePath);
+    const text = jsFileDocument.getText();
     let jsFunctionMatch = new RegExp(`\\n(?!\\n)(\\s*)${funcName}\\((.*)\\)\\s*{`).exec(text);
     if (jsFunctionMatch) {
       let emptyStrLen = jsFunctionMatch[1].length;
-      let lineNumber = jsFile.positionAt(jsFunctionMatch.index).line;
+      let lineNumber = jsFileDocument.positionAt(jsFunctionMatch.index).line;
       return new vscode.Location(vscode.Uri.file(jsFilePath), new vscode.Position(lineNumber + 1, emptyStrLen));
     }
 

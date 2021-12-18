@@ -1,0 +1,44 @@
+{
+  "Menu target": {
+    "scope": "javascript,typescript",
+    "prefix": "Menu target",
+    "body": "new ContextMenuNew({\n    data: {\n      menus: [\n        {\n          text: '菜单1',\n          clicked: (e) => this.clickMenu(e),\n          children: [],\n        },\n      ],\n      target: event.target,\n      pos: 'bottom',\n    }\n});",
+    "requirepath": "comp/common/menu-new"
+  },
+  "Menu position": {
+    "scope": "javascript,typescript",
+    "prefix": "Menu position",
+    "body": "new ContextMenuNew({\n    data: {\n      menus: [\n        {\n          text: '菜单1',\n          clicked: (e) => this.clickMenu(e),\n          children: [],\n        },\n      ],\n      position: {\n        left: event.pageX,\n        top: event.pageY\n      }\n    }\n});",
+    "requirepath": "comp/common/menu-new"
+  },
+  "Menu trigger": {
+    "scope": "javascript,typescript",
+    "prefix": "Menu trigger",
+    "body": "ContextMenuNew.showMenu({\n    data: {\n      menus: [\n        {\n          text: '菜单1',\n          clicked: (e) => this.clickMenu(e),\n          children: [],\n        },\n      ],\n      position: {\n        left: event.pageX,\n        top: event.pageY\n      },\n      triggerMode: 'hover',\n      clazz: 'm-overlay-hover',\n      triggerTarget: event.origin,\n    }\n  });",
+    "requirepath": "comp/common/menu-new"
+  },
+  "Modal new": {
+    "scope": "javascript,typescript",
+    "prefix": "Modal new",
+    "body": "new Modal({\n  data: {\n    title: '添加新用户',\n    autoClose: true,\n    width: 500,\n    className: 'm-modal-adduser',\n    noMaskAnim: false,\n  },\n  $body: `\n  <h3>Modal Content</h3>\n  <h3>Modal Content</h3>\n  <h3>Modal Content</h3>\n  <h3>Modal Content</h3>\n  `,\n}).toggle().$on('confirm', (event) => {\n  if (event.accept) {\n    // 确认之后的回调\n  }\n});",
+    "requirepath": "comp/common/modal"
+  },
+  "ConfirmModal new": {
+    "scope": "javascript,typescript",
+    "prefix": "ConfirmModal new",
+    "body": "new ConfirmModal({\n  data: {\n    title: '删除文件夹',\n    msg: '文件夹下存在大屏/文件夹，确定要删除吗？'\n  },\n  callback() {\n    // 确认之后的回调\n  },\n}).show()",
+    "requirepath": "comp/common/modal"
+  },
+  "SlideModal new": {
+    "scope": "javascript,typescript",
+    "prefix": "SlideModal new",
+    "body": "new SlideModal({\n  $body: `\n  <div class='slidein-container'>\n   <h2>Content</h2>\n   <h2>Content</h2>\n   <h2>Content</h2>\n   <h2>Content</h2>\n  </div>\n  `,\n  data: {\n    noConfirm: false,\n    title: '30天历史记录',\n    autoClose: true,\n    direction: 'right',\n  }\n}).toggle();\n",
+    "requirepath": "comp/common/slidein-modal"
+  },
+  "Overlay new": {
+    "scope": "javascript,typescript",
+    "prefix": "Overlay new",
+    "body": "new Overlay({\n    $body: `\n      <div</div>\n        `,\n    data: {\n      autoClose: true,\n      hideMask: false,\n      show: true,\n      target: e.target,\n      gap: 0,\n    },\n  }).$on('close', () => {\n    \n  }).toggle();",
+    "requirepath": "comp/overlay/overlay"
+  }
+}

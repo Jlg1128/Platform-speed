@@ -15,11 +15,10 @@ export class CompletionHTML implements vscode.CompletionItemProvider {
             params = params.map((p) => p.trim());
 
             // 生命周期函数过滤
-            if (['config', 'init', 'destory'].indexOf(funcName) !== -1) {
+            if (['config', 'init', 'destory', 'mount', 'enter', 'leave'].indexOf(funcName) !== -1) {
                 continue;
             }
             let completionItem = new vscode.CompletionItem(funcName, vscode.CompletionItemKind.Function);
-            completionItem.label = funcName;
             let snippet = `${funcName}(`;
             params.forEach((p, index) => {
                 if (['e', 'event', 'evt'].includes(p)) {
