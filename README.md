@@ -2,13 +2,15 @@
   <h1 align="center">Platform speed</h1>
 </p>
 
-有数BI vscode快捷开发工具
+有数BI Platform vscode快捷开发插件
 
 ## Features
-- Snippets
-- Auto Completion
+- Snippets代码片段 包括Regular代码片段、基础组件代码片段及组件路径引入
+- 补全提示 函数补全，$refs补全
+- 快速跳转 this/组件名/ref
+- Regular表达式高光 list、if、@、i18n、函数名、变量名
 
-## Snippets
+## Snippets代码片段
 
 | 语法  | 生成内容 | 效果 |
 | -------: | ------- | ---- |
@@ -22,34 +24,37 @@
 | `watch→`  | regular watch | this.$watch()
 | `emit→`  | regular emit | this.$emit()
 
-## 支持Platform基础组件快速导入
+## Snippets 基础组件代码片段及组件路径引入
+tip
+> 组件路径引入只在module目录下有效，因为components目录下无法确定是否已经引入了组件
 
-## Auto completion
-- 支持js文件内使用`this.`进行方法的补全操作  
-![this补全操作](image/this.gif)
+### example
 
-## Requirements
+| 组件名称  | 生成内容 | 效果 |
+| -------: | ------- | ---- |
+| `r-table`  | <r-table disabled={isDisabled} heads={heads} body={body} list={list} ref="table" loading={loading} \></r-table\>| - 
 
-### ✅ 开启字符串补全
-由于regular的模板是基于字符串的，因此大部分的补全在字符串内执行。  
-需要在设置(`User Setting`)中：
-```
-"editor.quickSuggestions": {
-    "other": true,
-    "comments": false,
-    "strings": true
-}
-```
-打开对`strings`补全的支持。
+## 补全提示
+函数补全
 
-### ✅ 模板文件补全支持  
-由于vscode内置语言中不支持`tpl`为后缀作为language，因此需要用户自定义关联`tpl`为`html`。  
-需要在设置(`User Setting`)中：
-```
-"files.associations": {
-    "*.tpl": "html"
-}
-```
-配置`tpl`后缀文件到`html`的关联
+![函数补全](https://img-blog.csdnimg.cn/1adbb5ab2f5d47bd86c6ca8defbfded4.gif#pic_center)
 
-**Enjoy!**
+refs补全
+
+![refs补全](https://img-blog.csdnimg.cn/78976e085af74c09964a29930e594e3a.gif#pic_center)
+
+## 快速跳转
+函数跳转
+
+![函数跳转](https://img-blog.csdnimg.cn/f2863e296e084940a2b220f841337cd1.gif#pic_center)
+
+ref跳转
+
+![ref跳转](https://img-blog.csdnimg.cn/483c0ae6822f487c8ee5f85b4e511054.gif#pic_center)
+
+this跳转
+
+![this跳转](https://img-blog.csdnimg.cn/06b873b917674722b0dd72f27cb93269.gif#pic_center)
+## Regular表达式高光
+
+![表达式高光](https://img-blog.csdnimg.cn/6538025d61924aac9857bb35b6293e37.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAQ29tb25lZQ==,size_20,color_FFFFFF,t_70,g_se,x_16)

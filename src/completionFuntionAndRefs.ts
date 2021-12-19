@@ -12,7 +12,7 @@ export class completionFuntionAndRefs implements vscode.CompletionItemProvider {
         while((result = regExp.exec(content)) !== null) {
             const refName = result[1];
             
-            let completionItem = new vscode.CompletionItem(refName, vscode.CompletionItemKind.Function);
+            let completionItem = new vscode.CompletionItem(refName, vscode.CompletionItemKind.Value);
             completionItems.push(completionItem);
         }
 
