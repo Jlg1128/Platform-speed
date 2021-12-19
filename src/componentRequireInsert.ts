@@ -16,10 +16,11 @@ async function componentRequireInsert(compName: string, requirepath: string|stri
       if (!isCurrentInJS) {
         jsFilePath = getFilePath(editor.document.fileName, '.js')
         if (fs.existsSync(jsFilePath)) {
+          let edit = new vscode.WorkspaceEdit();
           if (Array.isArray(requirepath)) {
-            requirepath.forEach(item => insertByFS(item, jsFilePath));
+            requirepath.forEach(item => insertByWorkspaceEdit(item, jsFilePath, edit));
           } else {
-            insertByFS(requirepath, jsFilePath)
+            insertByWorkspaceEdit(requirepath, jsFilePath, edit);
           }
         }
       } else {
@@ -52,12 +53,12 @@ async function componentRequireInsert(compName: string, requirepath: string|stri
       editBuilder.insert(new vscode.Position(0, 0), requirepath);
     }
   }
-  function insertByFS(requirepath: string, filepath: string) {
+  function insertByWorkspaceEdit(requirepath: string, filepath: string, edit: vscode.WorkspaceEdit) {
     let fileData = fs.readFileSync(filepath, 'utf-8');
     if (!isRequireAlreadyIn(fileData, requirepath)) {
       requirepath = `require('${requirepath}');\n`;
-      let newData = requirepath + fileData;
-      fs.writeFileSync(filepath, newData)
+      edit.insert(vscode.Uri.file(filepath), new vscode.Position(0, 0), requirepath);
+      vscode.workspace.applyEdit(edit);
     }
   }
   function isRequireAlreadyIn(fileData: string, requirepath: string): boolean {

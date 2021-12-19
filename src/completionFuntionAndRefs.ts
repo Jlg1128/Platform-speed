@@ -19,7 +19,7 @@ export class completionFuntionAndRefs implements vscode.CompletionItemProvider {
         return completionItems;
     }
 
-    private getMethods(content: string, currentLine: vscode.TextLine) {
+    private getMethods(content: string, currentLine: vscode.TextLine, option: {fileResolvePath: string}) {
         const completionItems:vscode.CompletionItem[] = [];
         
         // 函数定义正则
@@ -39,7 +39,7 @@ export class completionFuntionAndRefs implements vscode.CompletionItemProvider {
             let completionItem = new vscode.CompletionItem(funcName, vscode.CompletionItemKind.Function);
             let snippet = `${funcName}(`;
             params.forEach((p, index) => {
-                if (TAG_MATCH.test(currentLine.text) && ['e', 'event', 'evt'].includes(p)) {
+                if ((TAG_MATCH.test(currentLine.text) || /\.html/.test(option.fileResolvePath)) && ['e', 'event', 'evt'].includes(p)) {
                     p = '$event';
                 }
                 // 处理包含$符的变量
@@ -64,19 +64,19 @@ export class completionFuntionAndRefs implements vscode.CompletionItemProvider {
         
         // 触发条件为.时
         if (triggerCharacter === '.') {
+            const fileResolvePath = document.fileName;
             const lineText = document.lineAt(position.line).text;
             const isRefs = lineText.match(/\$refs\./g);
             const isThis = lineText.match(/this\./g);
-            const isCurrentInJS = /\.js$/.test(document.fileName);
+            const isCurrentInJS = /\.js$/.test(fileResolvePath);
             const currentLineText = document.lineAt(position);
-            
             // ref匹配
             // 1.在html中匹配html文件
             // 2.在js中匹配js+html
             if(isRefs) {
                 completionItems = this.getRefs(document.getText());
                 if (isCurrentInJS) {
-                    let tempDocument = await getRelativeContent(document.fileName);
+                    let tempDocument = await getRelativeContent(fileResolvePath);
                     if (tempDocument) {
                         completionItems = completionItems.concat(this.getRefs(tempDocument.getText()));
                     }
@@ -85,11 +85,11 @@ export class completionFuntionAndRefs implements vscode.CompletionItemProvider {
                 // function匹配
                 // 1.都匹配js文件
                 if (isCurrentInJS) {
-                    return this.getMethods(document.getText(), currentLineText);
+                    return this.getMethods(document.getText(), currentLineText, {fileResolvePath});
                 } else {
                     let tempDocument = await getRelativeContent(document.fileName);
                     if (tempDocument) {
-                        return this.getMethods(tempDocument.getText(), currentLineText);
+                        return this.getMethods(tempDocument.getText(), currentLineText, {fileResolvePath});
                     }
                 }
             }
