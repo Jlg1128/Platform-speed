@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
-import { getFilePath, getComponentResolvePath, getWiderRangeText, getCurrentProjectPath, judgeTypeOfTag, TAG_OPEN_TYPE, escapeRegExp } from './util';
+import { getFilePath, getComponentResolvePath, getWiderRangeText, getCurrentProjectPath, judgeTypeOfTag, TAG_OPEN_TYPE, escapeRegExp, getRelativeFilePath, getRelativeContent } from './util';
 import { NORMAL_HTMLELMENT_ARRAY, COMPONENT_DIR_PATH, TAG_MATCH, CONTAINER_COMPONENT_DIR_PATH, EXCLUDE_TRAVERSE_DIRNAMES } from './const';
 
 /**
@@ -22,7 +22,7 @@ async function provideDefinition(document: vscode.TextDocument, position: vscode
   // console.log('fileName: ' + fileName); // 文件名
   // console.log('fileResolvePath: ' + fileResolvePath); // 文件绝对路径
   // console.log('workDir: ' + workDir); // 当前文件所在目录
-  console.log('word: ' + word); // 当前光标所在单词
+  // console.log('word: ' + word); // 当前光标所在单词
 
   let projectPath = getCurrentProjectPath();
   if (!projectPath || !range) {
@@ -34,7 +34,7 @@ async function provideDefinition(document: vscode.TextDocument, position: vscode
   const funcNameMatch = /\.([a-zA-Z_]+)\s*\(/;
 
   let currentInJS = /.js$/.test(path.basename(fileResolvePath));
-  let jsFilePath = currentInJS ? fileResolvePath : getFilePath(vscode.window.activeTextEditor, '.js');
+  let jsFilePath = currentInJS ? fileResolvePath : getFilePath(document.fileName, '.js');
 
   if (!fs.existsSync(jsFilePath)) {
     return null;
@@ -44,12 +44,13 @@ async function provideDefinition(document: vscode.TextDocument, position: vscode
   let moreWiderRange = getWiderRangeText(document, position, 1, 1);
   let widerRangeHead = moreWiderRange[0];
   let widerRangeFoot = moreWiderRange[moreWiderRange.length - 1];
-  console.log('moreWiderRange', moreWiderRange);
 
   const refsMatch = new RegExp(`(?:(\\$refs\\.${word})|(\\{\\s*${word}\\s*\\}\\s*=\\s*this\\.\\$refs))`);
   let currentLineText = document.lineAt(position).text;
 
   let jsFileDocument: vscode.TextDocument | null = null;
+
+  // this jump
   if (word === 'this') {
     jsFileDocument = currentInJS ? document : await vscode.workspace.openTextDocument(jsFilePath);
     let componentMatch = new RegExp('[A-Z]{1}[a-z]+\\.extend\\(\\{').exec(jsFileDocument.getText());
@@ -62,22 +63,16 @@ async function provideDefinition(document: vscode.TextDocument, position: vscode
     // 匹配 this.$refs.input 或者 const {input} = this.$refs
     let refComponentMatch = null;
     let content = document.getText();
-    let filepath = '';
     if (refComponentMatch = new RegExp(`ref=['|"]?${word}['|"]?(?:>|\\s+)`).exec(content)) {
       // 先从当前文件匹配
       let position = document.positionAt(refComponentMatch.index);
       return new vscode.Location(vscode.Uri.file(fileResolvePath), new vscode.Position(position.line, position.character));
     } else {
       // 如果不在同一文件中，就在相对的文件中找。如果当前在js文件，则在html中找，如果在html文件，则在js上找。
-      if (currentInJS) {
-        filepath = getFilePath(vscode.window.activeTextEditor, '.html');
-      } else {
-        filepath = getFilePath(vscode.window.activeTextEditor, '.js');
-      }
-      if (fs.existsSync(filepath)) {
-        let tempDocument = await vscode.workspace.openTextDocument(filepath);
-        content = tempDocument.getText();
-        if (refComponentMatch = new RegExp(`ref=['|"]?${word}['|"]?(?:>|\\s+)`).exec(content)) {
+      let filepath = getRelativeFilePath(document.fileName);
+      let tempDocument = await getRelativeContent(document.fileName);
+      if (tempDocument) {
+        if (refComponentMatch = new RegExp(`ref=['|"]?${word}['|"]?(?:>|\\s+)`).exec(tempDocument.getText())) {
           let position = tempDocument.positionAt(refComponentMatch.index);
           return new vscode.Location(vscode.Uri.file(filepath), new vscode.Position(position.line, position.character));
         }
@@ -96,6 +91,7 @@ async function provideDefinition(document: vscode.TextDocument, position: vscode
     }
 
   } else if (widerRangeHead === '<' || widerRangeFoot === '>' || TAG_MATCH.test(currentLineText)) {
+    // 组件标签跳转
     let componentFilePath = '';
     let tagMatchArr = TAG_MATCH.exec(currentLineText);
     if (!tagMatchArr) {
@@ -129,7 +125,6 @@ async function provideDefinition(document: vscode.TextDocument, position: vscode
         return [link];
       }
     } else if (componentFilePath = getComponentResolvePath(needTraversePath, completeTag, EXCLUDE_TRAVERSE_DIRNAMES)) {
-      console.log('componentFilePath', componentFilePath);
       return new vscode.Location(vscode.Uri.file(componentFilePath), new vscode.Position(0, 0));
     }
   }

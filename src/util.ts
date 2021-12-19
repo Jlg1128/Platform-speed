@@ -1,17 +1,15 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
-import {JS_OR_HTML_REG} from './const'
+import { JS_OR_HTML_REG } from './const'
 
 export enum TAG_OPEN_TYPE {
   OPEN = 'open',
   CLOSE = 'close',
 }
 
-const getFilePath = (editor: vscode.TextEditor | undefined, fileExtension: string) => {
-  let activeFileName = editor ? editor.document.fileName : '';
-  activeFileName = activeFileName.substring(0, activeFileName.lastIndexOf('.'));
-  return activeFileName + fileExtension;
+const getFilePath = (filepath: string = '', fileExtension: string) => {
+  return filepath.substring(0, filepath.lastIndexOf('.')) + fileExtension;
 }
 
 const escapeRegExp = function (str: string) { // Credit: XRegExp 0.6.1 (c) 2007-2008 Steven Levithan <http://stevenlevithan.com/regex/xregexp/> MIT License
@@ -19,7 +17,7 @@ const escapeRegExp = function (str: string) { // Credit: XRegExp 0.6.1 (c) 2007-
 };
 
 // JS文件中判断当前位置是在open tag处还是在end tag处
-const judgeTypeOfTag = function(componentName: string, currentLineText: string,  currentPosition: vscode.Position): TAG_OPEN_TYPE {
+const judgeTypeOfTag = function (componentName: string, currentLineText: string, currentPosition: vscode.Position): TAG_OPEN_TYPE {
   let componentReg = new RegExp(`${escapeRegExp(componentName)}`, 'g');
   let componentMatch = null;
   let componentsIndexArr = [];
@@ -89,14 +87,14 @@ function getWiderRangeText(document: vscode.TextDocument, position: vscode.Posit
 
 function getCurrentProjectPath() {
   let wordSpaceFolders = vscode.workspace.workspaceFolders;
-  
+
   if (!wordSpaceFolders || !wordSpaceFolders.length) {
     return '';
   }
   return wordSpaceFolders[0].uri.path;
 }
 // 获取匹配的内容在文件中的地址
-function getComponentInFile(fileData: string, reg: RegExp, captureIndex: number = 0): null|{index: number, content: string} {
+function getComponentInFile(fileData: string, reg: RegExp, captureIndex: number = 0): null | { index: number, content: string } {
   let regMatchArr = reg.exec(fileData)
   if (!regMatchArr) {
     return null;
@@ -108,6 +106,26 @@ function getComponentInFile(fileData: string, reg: RegExp, captureIndex: number 
     content,
   }
 }
+
+function getRelativeFilePath(filepath: string): string {
+  if (/\.js$/.test(filepath)) {
+    return getFilePath(filepath, '.html')
+  } else if (/\.html$/.test(filepath)) {
+    return getFilePath(filepath, '.js')
+  }
+  return '';
+}
+
+async function getRelativeContent(filepath: string): Promise<vscode.TextDocument|null> {
+  let doucument = null;
+  if (fs.existsSync(filepath)) {
+    let relativePath = getRelativeFilePath(filepath);
+    if (relativePath && fs.existsSync(relativePath)) {
+      doucument = await vscode.workspace.openTextDocument(relativePath);
+    }
+  }
+  return doucument;
+}
 export {
   getFilePath,
   escapeRegExp,
@@ -116,4 +134,6 @@ export {
   judgeTypeOfTag,
   getCurrentProjectPath,
   getComponentInFile,
+  getRelativeFilePath,
+  getRelativeContent,
 }

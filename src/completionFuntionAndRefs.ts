@@ -1,18 +1,18 @@
 import * as vscode from 'vscode';
 import {TAG_MATCH} from './const'
+import {getRelativeContent} from './util';
 
-export class CompletionJS implements vscode.CompletionItemProvider {
+export class completionFuntionAndRefs implements vscode.CompletionItemProvider {
     private getRefs(content: string) {
         const completionItems:vscode.CompletionItem[] = [];
         // ref定义正则
-        const regExp = /ref\s*=\s*\"*(\w+)\"*\s*/g;
+        const regExp = /\bref\b\s*=\s*['|"]*(\w+)['|"]*\s*/g;
         
         let result;
         while((result = regExp.exec(content)) !== null) {
-            const funcName = result[1];
+            const refName = result[1];
             
-            let completionItem = new vscode.CompletionItem(funcName, vscode.CompletionItemKind.Function);
-            completionItem.label = funcName;
+            let completionItem = new vscode.CompletionItem(refName, vscode.CompletionItemKind.Function);
             completionItems.push(completionItem);
         }
 
@@ -33,7 +33,7 @@ export class CompletionJS implements vscode.CompletionItemProvider {
             params = params.map((p) => p.trim());
             
             // 生命周期函数过滤
-            if (['config', 'init', 'destory', 'mount', 'enter', 'leave'].indexOf(funcName) !== -1) {
+            if (['config', 'init', 'destory', 'mount', 'enter', 'leave', 'mapState', 'mapTemporary'].indexOf(funcName) !== -1) {
                 continue;
             }
             let completionItem = new vscode.CompletionItem(funcName, vscode.CompletionItemKind.Function);
@@ -55,12 +55,11 @@ export class CompletionJS implements vscode.CompletionItemProvider {
             completionItem.insertText = new vscode.SnippetString(snippet);
             completionItems.push(completionItem);
         }
-
         return completionItems;
     }
     
-    public provideCompletionItems(document:vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.CompletionItem[] {
-        let completionItems:vscode.CompletionItem[] = [];
+    public async provideCompletionItems(document:vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): Promise<vscode.CompletionItem[]> {
+        let completionItems: vscode.CompletionItem[] = [];
         const triggerCharacter = context.triggerCharacter;
         
         // 触发条件为.时
@@ -68,14 +67,31 @@ export class CompletionJS implements vscode.CompletionItemProvider {
             const lineText = document.lineAt(position.line).text;
             const isRefs = lineText.match(/\$refs\./g);
             const isThis = lineText.match(/this\./g);
+            const isCurrentInJS = /\.js$/.test(document.fileName);
+            const currentLineText = document.lineAt(position);
             
+            // ref匹配
+            // 1.在html中匹配html文件
+            // 2.在js中匹配js+html
             if(isRefs) {
-                return this.getRefs(document.getText());
-            }
-            if (isThis) {
-                console.log('range', document.lineAt(position).range);
-                
-                return this.getMethods(document.getText(), document.lineAt(position));
+                completionItems = this.getRefs(document.getText());
+                if (isCurrentInJS) {
+                    let tempDocument = await getRelativeContent(document.fileName);
+                    if (tempDocument) {
+                        completionItems = completionItems.concat(this.getRefs(tempDocument.getText()));
+                    }
+                }
+            } else if (isThis) {
+                // function匹配
+                // 1.都匹配js文件
+                if (isCurrentInJS) {
+                    return this.getMethods(document.getText(), currentLineText);
+                } else {
+                    let tempDocument = await getRelativeContent(document.fileName);
+                    if (tempDocument) {
+                        return this.getMethods(tempDocument.getText(), currentLineText);
+                    }
+                }
             }
         }
 

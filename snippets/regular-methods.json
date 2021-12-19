@@ -4,13 +4,11 @@
         "body": [
             "const Regular = require('regularjs');",
             "",
-            "const tpl = ``;",
-            "",
             "module.export = Regular.extend({",
             "\tname: '${1:ComponentName}',",
-            "\ttemplate: tpl,",
+            "\ttemplate: '',",
             "\tconfig(data) {},",
-            "});"
+            "});\n"
         ],
         "description": "regular component"
     },

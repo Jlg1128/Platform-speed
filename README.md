@@ -17,7 +17,7 @@
 | `if→`  | regular if | {#if}
 | `ifelse→`  | regular if else | {#if} {#else} {/if}
 | `ifelseif→`  | regular if else if | {#if} {#elseif} {/if}
-| `include→`  | regular include statement | {#include}
+| `include→`｜`inc`  | regular include statement | {#include}
 | `update→`  | regular update | this.$update()
 | `watch→`  | regular watch | this.$watch()
 | `emit→`  | regular emit | this.$emit()

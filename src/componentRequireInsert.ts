@@ -14,7 +14,7 @@ async function componentRequireInsert(compName: string, requirepath: string|stri
       let jsFilePath = document.fileName;
       let fileData = document.getText();
       if (!isCurrentInJS) {
-        jsFilePath = getFilePath(editor, '.js')
+        jsFilePath = getFilePath(editor.document.fileName, '.js')
         if (fs.existsSync(jsFilePath)) {
           if (Array.isArray(requirepath)) {
             requirepath.forEach(item => insertByFS(item, jsFilePath));
