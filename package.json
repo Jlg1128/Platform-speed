@@ -2,12 +2,14 @@
     "name": "platform-speed",
     "displayName": "platform-speed",
     "description": "Platform 项目快速开发",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "publisher": "jianglonggui",
     "engines": {
         "vscode": "^1.63.0"
     },
-    "categories":["Snippets"],
+    "categories": [
+        "Snippets"
+    ],
     "repository": {
         "type": "git",
         "url": "https://github.com/Jlg1128/Platform-speed.git"
